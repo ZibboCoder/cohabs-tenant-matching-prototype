@@ -1,0 +1,234 @@
+import numpy as np
+import pandas as pd
+
+# =========================
+# CONFIG
+# =========================
+SEED = 42
+np.random.seed(SEED)
+
+N_PROFILES = 300
+SCALE_MIN = 1
+SCALE_MAX = 5
+TOP_N = 5
+
+FEATURES = [
+    "cleanliness_level",
+    "noise_tolerance",
+    "sleep_schedule",
+    "routine_structure",
+    "WFH_frequency",
+    "sociability_level",
+    "guest_tolerance",
+    "privacy_need",
+    "conflict_style",
+    "shared_spaces_usage",
+]
+
+FEATURE_LABELS = {
+    "cleanliness_level": "Cleanliness",
+    "noise_tolerance": "Noise tolerance",
+    "sleep_schedule": "Sleep schedule",
+    "routine_structure": "Routine structure",
+    "WFH_frequency": "Work-from-home frequency",
+    "sociability_level": "Sociability",
+    "guest_tolerance": "Guest tolerance",
+    "privacy_need": "Privacy need",
+    "conflict_style": "Conflict style",
+    "shared_spaces_usage": "Shared spaces usage",
+}
+
+WEIGHTS = {
+    "cleanliness_level": 1.3,
+    "noise_tolerance": 1.3,
+    "sleep_schedule": 1.2,
+    "routine_structure": 1.0,
+    "WFH_frequency": 0.8,
+    "sociability_level": 1.0,
+    "guest_tolerance": 1.0,
+    "privacy_need": 1.1,
+    "conflict_style": 0.9,
+    "shared_spaces_usage": 0.9,
+}
+
+SCORING_MODE = {
+    "cleanliness_level": "similarity",
+    "noise_tolerance": "similarity",
+    "sleep_schedule": "similarity",
+    "routine_structure": "similarity",
+    "WFH_frequency": "similarity",
+    "sociability_level": "complementarity",
+    "guest_tolerance": "similarity",
+    "privacy_need": "complementarity",
+    "conflict_style": "similarity",
+    "shared_spaces_usage": "complementarity",
+}
+
+
+# =========================
+# DATA GENERATION
+# =========================
+def make_tenant_label(user_id: int) -> str:
+    return f"Tenant_{user_id:03d}"
+
+
+def generate_synthetic_profiles(n: int) -> pd.DataFrame:
+    data = {"user_id": np.arange(1, n + 1)}
+    for f in FEATURES:
+        data[f] = np.random.randint(SCALE_MIN, SCALE_MAX + 1, size=n)
+
+    df = pd.DataFrame(data)
+    df["tenant_label"] = df["user_id"].apply(make_tenant_label)
+
+    cols = ["user_id", "tenant_label"] + FEATURES
+    return df[cols]
+
+
+# =========================
+# SCORING
+# =========================
+def similarity_score(a: float, b: float) -> float:
+    max_dist = SCALE_MAX - SCALE_MIN
+    dist = abs(a - b)
+    return 1.0 - (dist / max_dist)
+
+def complementarity_score(a: float, b: float) -> float:
+    """
+    Complementarity heuristic (0..1):
+    """
+    - rewards pairs whose average is close to the middle of the scale
+    - applies a small penalty when both values are extreme
+"""- premia coppie il cui valore medio è vicino al centro della scala
+    - applica una lieve penalità se entrambi i valori sono estremi
+    """
+    mid = (SCALE_MIN + SCALE_MAX) / 2.0  # es. 3.0 per scala 1..5
+    avg = (a + b) / 2.0
+    max_dev = (SCALE_MAX - SCALE_MIN) / 2.0  # es. 2.0
+
+    # vicinanza della media al centro (1 = perfetto, 0 = agli estremi)
+    avg_closeness = 1.0 - (abs(avg - mid) / max_dev)
+
+    # quanto sono estremi i due valori (0..1)
+    a_ext = abs(a - mid) / max_dev
+    b_ext = abs(b - mid) / max_dev
+    extremes_penalty = (a_ext + b_ext) / 2.0  # 0..1
+
+    score = avg_closeness * (1.0 - 0.25 * extremes_penalty)
+    return float(max(0.0, min(1.0, score)))
+
+
+def feature_score(feature: str, a: float, b: float) -> float:
+    """
+    Seleziona la funzione di scoring in base a SCORING_MODE.
+    Ritorna un valore 0..1.
+    """
+    mode = SCORING_MODE.get(feature, "similarity")
+    if mode == "complementarity":
+        return complementarity_score(a, b)
+    return similarity_score(a, b)
+
+def compute_pair_score(a_row: pd.Series, b_row: pd.Series):
+    weighted_sum = 0.0
+    total_weight = 0.0
+    details = {}
+
+    for f in FEATURES:
+        a_val = float(a_row[f])
+        b_val = float(b_row[f])
+        weight = WEIGHTS[f]
+
+        score = similarity_score(a_val, b_val)
+        contribution = weight * score
+
+        details[f] = {
+            "a": int(a_val),
+            "b": int(b_val),
+            "feature_score": round(score, 4),
+            "weight": weight,
+            "contribution": round(contribution, 4),
+        }
+
+        weighted_sum += contribution
+        total_weight += weight
+
+    final_score = round((weighted_sum / total_weight) * 100, 2)
+    return final_score, details
+
+
+# =========================
+# EXPLANATION
+# =========================
+def build_explanations(a_row, b_row, details, final_score):
+    sorted_features = sorted(
+        details.items(),
+        key=lambda x: x[1]["contribution"],
+        reverse=True,
+    )
+
+    top3 = sorted_features[:3]
+    top_features = [FEATURE_LABELS[k] for k, _ in top3]
+
+    explanation_short = (
+        f"High compatibility driven by {top_features[0]}, "
+        f"{top_features[1]} and {top_features[2]}."
+    )
+
+    explanation_long = (
+        f"{a_row['tenant_label']} matches well with {b_row['tenant_label']} "
+        f"(score {final_score}%). "
+        f"The strongest alignment is in {top_features[0]}, "
+        f"{top_features[1]} and {top_features[2]}, "
+        f"where their behavioural preferences are closely aligned."
+    )
+
+    return explanation_short, explanation_long
+
+
+# =========================
+# MATCHING ENGINE
+# =========================
+def compute_top_matches(profiles: pd.DataFrame):
+    results = []
+    rows = [profiles.iloc[i] for i in range(len(profiles))]
+
+    for i, a in enumerate(rows):
+        scored = []
+
+        for j, b in enumerate(rows):
+            if i == j:
+                continue
+
+            final_score, details = compute_pair_score(a, b)
+            explanation_short, explanation_long = build_explanations(a, b, details, final_score)
+
+            scored.append((j, final_score, explanation_short, explanation_long))
+
+        scored.sort(key=lambda x: x[1], reverse=True)
+
+        for rank, (j_idx, score, short_exp, long_exp) in enumerate(scored[:TOP_N], start=1):
+            results.append({
+                "user_id": int(a["user_id"]),
+                "tenant_label": a["tenant_label"],
+                "match_rank": rank,
+                "match_user_id": int(rows[j_idx]["user_id"]),
+                "match_tenant_label": rows[j_idx]["tenant_label"],
+                "compatibility_score": score,
+                "explanation_short": short_exp,
+                "explanation_long": long_exp,
+            })
+
+    return pd.DataFrame(results)
+
+
+# =========================
+# RUN
+# =========================
+if __name__ == "__main__":
+    profiles = generate_synthetic_profiles(N_PROFILES)
+    profiles.to_csv("synthetic_profiles.csv", index=False)
+
+    matches = compute_top_matches(profiles)
+    matches.to_csv("top_matches_explained.csv", index=False)
+
+    print("Done ✅")
+    print("Files created: synthetic_profiles.csv and top_matches_explained.csv")
