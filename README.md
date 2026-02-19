@@ -362,3 +362,6 @@ Then open the local URL shown in the terminal (example):
 - Donut visualization for compatibility
 - Realistic avatars (DiceBear)
 - Light theme configuration
+
+## License
+This project is licensed under the MIT License.
