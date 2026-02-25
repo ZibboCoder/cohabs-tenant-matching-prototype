@@ -1,7 +1,8 @@
-import hashlib
+import math
 import numpy as np
 import pandas as pd
 import streamlit as st
+import streamlit.components.v1 as components
 import urllib.parse
 
 # ----------------------------
@@ -14,171 +15,192 @@ st.set_page_config(
 )
 
 # ----------------------------
-# CSS — Professional & Clean
+# CSS — PropTech Style
+# FIX: selettori aggiornati per Streamlit recente
 # ----------------------------
 st.markdown("""
 <style>
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Serif+Display&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fraunces:ital,wght@0,400;0,700;1,400&display=swap');
 
-/* ---- Base ---- */
+/* ---- Reset & Base ---- */
 html, body, [class*="css"] {
-    font-family: 'DM Sans', sans-serif;
-    color: #0f172a;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    color: #1a2332;
 }
 
-.main { background: #f8fafc; }
-.block-container { padding: 2rem 3rem 3rem 3rem !important; max-width: 1200px; }
+/* ---- Background PropTech — FIX selettori ---- */
+.stApp,
+[data-testid="stAppViewContainer"],
+[data-testid="stAppViewContainer"] > .main {
+    background-color: #f0f4f0 !important;
+    background-image:
+        radial-gradient(ellipse at 0% 0%, rgba(20,184,166,0.09) 0px, transparent 60%),
+        radial-gradient(ellipse at 100% 100%, rgba(15,52,96,0.07) 0px, transparent 60%) !important;
+}
+
+[data-testid="stHeader"] {
+    background: transparent !important;
+}
+
+.block-container {
+    padding: 2rem 3rem 3rem 3rem !important;
+    max-width: 1200px;
+}
 
 /* ---- Hero ---- */
 .hero {
-    background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 60%, #1d4ed8 100%);
-    border-radius: 16px;
+    background: linear-gradient(135deg, #0f3460 0%, #0d7377 55%, #14b8a6 100%);
+    border-radius: 20px;
     padding: 3rem 3.5rem;
     margin-bottom: 2rem;
     position: relative;
     overflow: hidden;
+    box-shadow: 0 20px 60px rgba(13,115,119,0.25);
 }
 .hero::before {
     content: '';
     position: absolute;
-    top: -40px; right: -40px;
-    width: 220px; height: 220px;
-    background: rgba(255,255,255,0.04);
+    top: -60px; right: -60px;
+    width: 280px; height: 280px;
+    background: rgba(255,255,255,0.05);
     border-radius: 50%;
 }
 .hero::after {
     content: '';
     position: absolute;
-    bottom: -60px; left: 40%;
-    width: 300px; height: 300px;
-    background: rgba(29,78,216,0.15);
+    bottom: -80px; left: 35%;
+    width: 350px; height: 350px;
+    background: rgba(20,184,166,0.12);
     border-radius: 50%;
 }
 .hero-title {
-    font-family: 'DM Serif Display', serif;
-    font-size: 2.6rem;
+    font-family: 'Fraunces', serif;
+    font-size: 2.8rem;
     color: #ffffff;
-    margin: 0 0 0.5rem 0;
-    line-height: 1.15;
+    margin: 0 0 0.6rem 0;
+    line-height: 1.1;
+    position: relative; z-index: 1;
 }
 .hero-sub {
-    font-size: 1.05rem;
-    color: #93c5fd;
-    margin: 0 0 1.5rem 0;
+    font-size: 1rem;
+    color: #99f6e4;
+    margin: 0 0 1.75rem 0;
     font-weight: 400;
+    position: relative; z-index: 1;
 }
 .hero-badges {
     display: flex;
     gap: 0.75rem;
     flex-wrap: wrap;
+    position: relative; z-index: 1;
 }
 .badge {
-    background: rgba(255,255,255,0.1);
-    border: 1px solid rgba(255,255,255,0.15);
-    color: #e0f2fe;
-    padding: 0.3rem 0.85rem;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.2);
+    color: #e0fdf4;
+    padding: 0.35rem 0.9rem;
     border-radius: 20px;
-    font-size: 0.8rem;
-    font-weight: 500;
-    backdrop-filter: blur(4px);
+    font-size: 0.78rem;
+    font-weight: 600;
+    backdrop-filter: blur(8px);
 }
 
 /* ---- Section titles ---- */
 .section-title {
-    font-family: 'DM Serif Display', serif;
+    font-family: 'Fraunces', serif;
     font-size: 1.5rem;
-    color: #0f172a;
+    color: #0f3460;
     margin: 2rem 0 0.25rem 0;
 }
 .section-sub {
-    font-size: 0.9rem;
+    font-size: 0.88rem;
     color: #64748b;
     margin-bottom: 1.25rem;
 }
 
-/* ---- Match card ---- */
+/* ---- Cards ---- */
 .match-card {
     background: #ffffff;
     border: 1px solid #e2e8f0;
-    border-radius: 12px;
+    border-radius: 14px;
     padding: 1.25rem 1.5rem;
     margin-bottom: 1rem;
-    transition: box-shadow 0.2s;
+    box-shadow: 0 1px 4px rgba(15,52,96,0.06);
+    transition: box-shadow 0.2s, transform 0.2s;
 }
-.match-card:hover { box-shadow: 0 4px 20px rgba(15,23,42,0.08); }
-
-.match-name {
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: #0f172a;
-    margin: 0 0 0.15rem 0;
+.match-card:hover {
+    box-shadow: 0 6px 24px rgba(13,115,119,0.12);
+    transform: translateY(-1px);
 }
-.match-score-text {
-    font-size: 0.85rem;
-    color: #475569;
-    margin: 0;
-}
-.driver-tag {
-    display: inline-block;
-    background: #eff6ff;
-    color: #1d4ed8;
-    border: 1px solid #bfdbfe;
-    padding: 0.2rem 0.6rem;
-    border-radius: 6px;
-    font-size: 0.75rem;
-    font-weight: 500;
-    margin: 0.15rem 0.1rem;
-}
-.explanation-box {
-    background: #f8fafc;
-    border-left: 3px solid #1d4ed8;
-    border-radius: 0 8px 8px 0;
-    padding: 0.75rem 1rem;
-    font-size: 0.85rem;
-    color: #334155;
-    margin-top: 0.75rem;
-}
-
-/* ---- Profile table ---- */
 .profile-box {
     background: #ffffff;
     border: 1px solid #e2e8f0;
-    border-radius: 12px;
-    padding: 1.25rem 1.5rem;
+    border-radius: 14px;
+    padding: 1.5rem 1.75rem;
     margin-bottom: 1.5rem;
+    box-shadow: 0 1px 4px rgba(15,52,96,0.06);
 }
 
-/* ---- Questionnaire ---- */
+/* ---- Match name & score ---- */
+.match-name {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #0f3460;
+    margin: 0 0 0.15rem 0;
+}
+.match-score-text {
+    font-size: 0.83rem;
+    color: #64748b;
+    margin: 0;
+}
+
+/* ---- Driver tags ---- */
+.driver-tag {
+    display: inline-block;
+    background: #f0fdfa;
+    color: #0d7377;
+    border: 1px solid #99f6e4;
+    padding: 0.2rem 0.65rem;
+    border-radius: 6px;
+    font-size: 0.73rem;
+    font-weight: 600;
+    margin: 0.15rem 0.1rem;
+}
+
+/* ---- Explanation box ---- */
+.explanation-box {
+    background: #f0fdfa;
+    border-left: 3px solid #14b8a6;
+    border-radius: 0 8px 8px 0;
+    padding: 0.75rem 1rem;
+    font-size: 0.83rem;
+    color: #134e4a;
+    margin-top: 0.75rem;
+}
+
+/* ---- Questionnaire header ---- */
 .questionnaire-header {
-    background: linear-gradient(135deg, #ecfdf5, #d1fae5);
-    border: 1px solid #6ee7b7;
-    border-radius: 12px;
+    background: linear-gradient(135deg, #f0fdfa, #ccfbf1);
+    border: 1px solid #99f6e4;
+    border-radius: 14px;
     padding: 1.5rem 2rem;
     margin-bottom: 1.5rem;
 }
 .questionnaire-title {
-    font-family: 'DM Serif Display', serif;
+    font-family: 'Fraunces', serif;
     font-size: 1.4rem;
-    color: #064e3b;
+    color: #0f3460;
     margin: 0 0 0.3rem 0;
 }
 .questionnaire-sub {
-    font-size: 0.9rem;
-    color: #065f46;
+    font-size: 0.88rem;
+    color: #0d7377;
     margin: 0;
-}
-
-/* ---- Score highlight ---- */
-.score-big {
-    font-family: 'DM Serif Display', serif;
-    font-size: 2.2rem;
-    font-weight: 700;
-    color: #1d4ed8;
 }
 
 /* ---- Sidebar ---- */
 section[data-testid="stSidebar"] {
-    background: #f1f5f9;
+    background: #f8fffe !important;
     border-right: 1px solid #e2e8f0;
 }
 section[data-testid="stSidebar"] .block-container {
@@ -192,85 +214,68 @@ section[data-testid="stSidebar"] .block-container {
 }
 .stTabs [data-baseweb="tab"] {
     border-radius: 8px 8px 0 0;
-    font-weight: 500;
-    font-size: 0.9rem;
+    font-weight: 600;
+    font-size: 0.88rem;
 }
-
-/* ---- Divider ---- */
-hr { border-color: #e2e8f0; margin: 1.5rem 0; }
 
 /* ---- Footer ---- */
 .footer {
     text-align: center;
-    font-size: 0.78rem;
+    font-size: 0.76rem;
     color: #94a3b8;
     margin-top: 3rem;
     padding-top: 1.5rem;
     border-top: 1px solid #e2e8f0;
 }
+
+hr { border-color: #e2e8f0; margin: 1.5rem 0; }
 </style>
 """, unsafe_allow_html=True)
 
 
-# ----------------------------
-# Matching engine (inline)
-# importiamo le funzioni core direttamente
-# per il questionario live senza dipendenze esterne
-# ----------------------------
-SCALE_MIN = 1
-SCALE_MAX = 5
-
+# ============================================================
+# MATCHING ENGINE
+# ============================================================
 FEATURES = [
-    "cleanliness_level",
-    "noise_tolerance",
-    "sleep_schedule",
-    "routine_structure",
-    "WFH_frequency",
-    "sociability_level",
-    "guest_tolerance",
-    "privacy_need",
-    "conflict_style",
-    "shared_spaces_usage",
+    "cleanliness_level", "noise_tolerance", "sleep_schedule",
+    "routine_structure", "WFH_frequency", "sociability_level",
+    "guest_tolerance", "privacy_need", "conflict_style", "shared_spaces_usage",
 ]
 
 WEIGHTS = {
-    "cleanliness_level": 1.3,
-    "noise_tolerance": 1.3,
-    "sleep_schedule": 1.2,
-    "routine_structure": 1.0,
-    "WFH_frequency": 0.8,
-    "sociability_level": 1.0,
-    "guest_tolerance": 1.0,
-    "privacy_need": 1.1,
-    "conflict_style": 0.9,
+    "cleanliness_level": 1.3, "noise_tolerance": 1.3, "sleep_schedule": 1.2,
+    "routine_structure": 1.0, "WFH_frequency": 0.8, "sociability_level": 1.0,
+    "guest_tolerance": 1.0,   "privacy_need": 1.1,   "conflict_style": 0.9,
     "shared_spaces_usage": 0.9,
 }
 
 SCORING_MODE = {
-    "cleanliness_level": "similarity",
-    "noise_tolerance": "similarity",
-    "sleep_schedule": "similarity",
-    "routine_structure": "similarity",
-    "WFH_frequency": "similarity",
-    "sociability_level": "complementarity",
-    "guest_tolerance": "similarity",
-    "privacy_need": "similarity",
-    "conflict_style": "similarity",
-    "shared_spaces_usage": "complementarity",
+    "cleanliness_level": "similarity",   "noise_tolerance": "similarity",
+    "sleep_schedule": "similarity",      "routine_structure": "similarity",
+    "WFH_frequency": "similarity",       "sociability_level": "complementarity",
+    "guest_tolerance": "similarity",     "privacy_need": "similarity",
+    "conflict_style": "similarity",      "shared_spaces_usage": "complementarity",
 }
 
-# Human-readable labels and descriptions for the questionnaire
+FEATURE_COLORS = {
+    "cleanliness_level": "#14b8a6",  "noise_tolerance": "#0d7377",
+    "sleep_schedule": "#6366f1",     "routine_structure": "#f59e0b",
+    "WFH_frequency": "#3b82f6",      "sociability_level": "#ec4899",
+    "guest_tolerance": "#8b5cf6",    "privacy_need": "#ef4444",
+    "conflict_style": "#f97316",     "shared_spaces_usage": "#10b981",
+}
+
 FEATURE_LABELS = {
-    "cleanliness_level":   ("🧹 Cleanliness standard", "1 = very relaxed · 5 = very high standards"),
-    "noise_tolerance":     ("🔊 Noise tolerance",      "1 = need complete silence · 5 = totally fine with noise"),
-    "sleep_schedule":      ("🌙 Sleep schedule",       "1 = very early bird · 5 = night owl"),
-    "routine_structure":   ("📅 Daily routine",        "1 = very flexible · 5 = highly structured"),
-    "WFH_frequency":       ("💻 Work from home",       "1 = always at the office · 5 = always at home"),
-    "sociability_level":   ("🤝 Sociability at home",  "1 = very introverted · 5 = very social"),
-    "guest_tolerance":     ("🚪 Guests at home",       "1 = prefer no guests · 5 = very open to guests"),
-    "privacy_need":        ("🔒 Need for privacy",     "1 = very open · 5 = need a lot of personal space"),
-    "conflict_style":      ("💬 Conflict approach",    "1 = very avoidant · 5 = very direct"),
-    "shared_spaces_usage": ("🍳 Shared spaces usage",  "1 = mostly in my room · 5 = always in common areas"),
+    "cleanliness_level":   ("🧹 Cleanliness",     "1 = relaxed · 5 = very high standards"),
+    "noise_tolerance":     ("🔊 Noise tolerance",  "1 = need silence · 5 = fine with noise"),
+    "sleep_schedule":      ("🌙 Sleep schedule",   "1 = early bird · 5 = night owl"),
+    "routine_structure":   ("📅 Daily routine",    "1 = flexible · 5 = highly structured"),
+    "WFH_frequency":       ("💻 Work from home",   "1 = always office · 5 = always home"),
+    "sociability_level":   ("🤝 Sociability",      "1 = introverted · 5 = very social"),
+    "guest_tolerance":     ("🚪 Guests",           "1 = no guests · 5 = very open"),
+    "privacy_need":        ("🔒 Privacy need",     "1 = very open · 5 = needs space"),
+    "conflict_style":      ("💬 Conflict style",   "1 = avoidant · 5 = very direct"),
+    "shared_spaces_usage": ("🍳 Shared spaces",    "1 = stays in room · 5 = always common areas"),
 }
 
 
@@ -278,100 +283,190 @@ def clamp01(x):
     return float(max(0.0, min(1.0, x)))
 
 def similarity_score(a, b):
-    max_dist = float(SCALE_MAX - SCALE_MIN)
-    return clamp01(1.0 - (abs(a - b) / max_dist))
+    return clamp01(1.0 - abs(a - b) / 4.0)
 
 def complementarity_score(a, b):
-    target_sum = float(SCALE_MIN + SCALE_MAX)
-    max_dev = float(SCALE_MAX - SCALE_MIN)
-    return clamp01(1.0 - (abs(a + b - target_sum) / max_dev))
+    return clamp01(1.0 - abs(a + b - 6) / 4.0)
 
 def feature_score(feature, a, b):
-    mode = SCORING_MODE.get(feature, "similarity")
-    if mode == "complementarity":
+    if SCORING_MODE.get(feature) == "complementarity":
         return complementarity_score(a, b), "complementarity"
     return similarity_score(a, b), "similarity"
 
 def prettify(f):
     return f.replace("_", " ").capitalize()
 
-def compute_matches_for_user(user_values: dict, profiles_df: pd.DataFrame, top_n: int = 5):
-    """
-    Compute top_n matches for a given user_values dict against profiles_df.
-    Returns a list of dicts with match info.
-    """
-    total_weight = sum(WEIGHTS.get(f, 1.0) for f in FEATURES)
+def _run_matching(user_values, profiles_df, exclude_id=None, top_n=5):
+    total_w = sum(WEIGHTS.get(f, 1.0) for f in FEATURES)
     results = []
-
     for _, row in profiles_df.iterrows():
-        weighted_sum = 0.0
+        if exclude_id is not None and row["user_id"] == exclude_id:
+            continue
+        ws = 0.0
         details = []
         for f in FEATURES:
-            av = float(user_values[f])
-            bv = float(row[f])
-            sc, mode = feature_score(f, av, bv)
+            sc, mode = feature_score(f, float(user_values[f]), float(row[f]))
             w = float(WEIGHTS.get(f, 1.0))
-            weighted_sum += w * sc
+            ws += w * sc
             details.append((f, sc, w, mode))
-
-        compat = (weighted_sum / total_weight) * 100.0
+        compat = (ws / total_w) * 100.0
         details.sort(key=lambda x: x[1] * x[2], reverse=True)
-        top3 = details[:3]
-
         results.append({
             "label": row["tenant_label"],
             "score": round(compat, 2),
-            "top3": top3,
+            "top3": details[:3],
+            "all_details": details,
         })
-
     results.sort(key=lambda x: x["score"], reverse=True)
     return results[:top_n]
 
+def compute_matches_for_user(user_values, profiles_df, top_n=5):
+    return _run_matching(user_values, profiles_df, exclude_id=None, top_n=top_n)
 
-# ----------------------------
-# Helpers
-# ----------------------------
-def avatar_url(label: str, size: int = 128, style: str = "personas") -> str:
+def compute_matches_from_profile(profile_row, profiles_df, top_n=5):
+    user_values = {f: float(profile_row[f]) for f in FEATURES}
+    return _run_matching(user_values, profiles_df, exclude_id=profile_row["user_id"], top_n=top_n)
+
+
+# ============================================================
+# HELPERS VISIVI
+# ============================================================
+def avatar_url(label: str, size: int = 128) -> str:
     seed = urllib.parse.quote(label)
-    return f"https://api.dicebear.com/9.x/{style}/png?seed={seed}&size={size}"
+    return f"https://api.dicebear.com/9.x/notionists/png?seed={seed}&size={size}&backgroundColor=f0fdfa"
 
-def donut_svg(percent_value: float, size: int = 80, stroke: int = 9) -> str:
-    p = max(0.0, min(100.0, float(percent_value)))
+def donut_svg(p: float, size: int = 80, stroke: int = 9) -> str:
+    p = max(0.0, min(100.0, float(p)))
     r = (size - stroke) / 2
-    c = 2 * 3.141592653589793 * r
+    c = 2 * math.pi * r
     offset = c * (1 - p / 100.0)
-    # Color based on score
-    color = "#16a34a" if p >= 80 else "#1d4ed8" if p >= 60 else "#f59e0b" if p >= 40 else "#ef4444"
-    return f"""
-    <svg width="{size}" height="{size}" viewBox="0 0 {size} {size}">
-      <circle cx="{size/2}" cy="{size/2}" r="{r}"
-              fill="none" stroke="#e2e8f0" stroke-width="{stroke}" />
-      <circle cx="{size/2}" cy="{size/2}" r="{r}"
-              fill="none" stroke="{color}" stroke-width="{stroke}"
-              stroke-linecap="round"
-              stroke-dasharray="{c:.2f}"
-              stroke-dashoffset="{offset:.2f}"
-              transform="rotate(-90 {size/2} {size/2})" />
+    color = "#14b8a6" if p >= 80 else "#0d7377" if p >= 60 else "#f59e0b" if p >= 40 else "#ef4444"
+    return f"""<svg width="{size}" height="{size}" viewBox="0 0 {size} {size}">
+      <circle cx="{size/2}" cy="{size/2}" r="{r}" fill="none" stroke="#e2e8f0" stroke-width="{stroke}"/>
+      <circle cx="{size/2}" cy="{size/2}" r="{r}" fill="none" stroke="{color}" stroke-width="{stroke}"
+              stroke-linecap="round" stroke-dasharray="{c:.2f}" stroke-dashoffset="{offset:.2f}"
+              transform="rotate(-90 {size/2} {size/2})"/>
       <text x="50%" y="52%" dominant-baseline="middle" text-anchor="middle"
-            font-family="DM Sans, system-ui" font-size="{int(size*0.2)}"
-            font-weight="700" fill="#0f172a">
-        {p:.0f}%
-      </text>
+            font-family="Plus Jakarta Sans,system-ui" font-size="{int(size*0.2)}"
+            font-weight="700" fill="#0f3460">{p:.0f}%</text>
     </svg>"""
 
-def load_data(profiles_path, matches_path):
-    profiles = pd.read_csv(profiles_path)
-    matches = pd.read_csv(matches_path)
-    return profiles, matches
+def render_segments(val_a: int, color: str, label: str, val_b: int = None):
+    """
+    FIX: Render barre a segmenti direttamente con st.markdown chiamato UNA VOLTA.
+    Costruisce HTML completo e lo renderizza subito.
+    """
+    # Riga A (tenant / user)
+    segs_a = ""
+    for i in range(1, 6):
+        bg = color if i <= val_a else "#e2e8f0"
+        segs_a += f'<div style="flex:1;height:9px;background:{bg};border-radius:3px;margin:0 2px;"></div>'
+
+    # Riga B (match) — opzionale
+    row_b = ""
+    if val_b is not None:
+        segs_b = ""
+        for i in range(1, 6):
+            bg = "#94a3b8" if i <= val_b else "#f1f5f9"
+            segs_b += f'<div style="flex:1;height:6px;background:{bg};border-radius:2px;margin:0 2px;"></div>'
+        row_b = f"""
+        <div style="display:flex;align-items:center;gap:4px;margin-top:3px;">
+          <span style="font-size:0.63rem;color:#94a3b8;width:30px;flex-shrink:0;">them</span>
+          <div style="display:flex;flex:1;">{segs_b}</div>
+          <span style="font-size:0.68rem;font-weight:600;color:#94a3b8;width:22px;text-align:right;">{val_b}/5</span>
+        </div>"""
+
+    you_label = f'<span style="font-size:0.63rem;color:#64748b;width:30px;flex-shrink:0;">{"you" if val_b is not None else ""}</span>'
+
+    html = f"""
+    <div style="margin-bottom:0.6rem;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+        <span style="font-size:0.76rem;color:#334155;font-weight:500;">{label}</span>
+        <span style="font-size:0.72rem;font-weight:700;color:#0f3460;">{val_a}/5</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:4px;">
+        {you_label}
+        <div style="display:flex;flex:1;">{segs_a}</div>
+      </div>
+      {row_b}
+    </div>"""
+    st.markdown(html, unsafe_allow_html=True)
+
+def render_radar(vals_a, vals_b, labels, title_a="Selected", title_b="Best match", size=280):
+    """
+    FIX: Usa st.components.v1.html() per renderizzare SVG complessi.
+    Questo bypassa i limiti di st.markdown con SVG.
+    """
+    n = len(vals_a)
+    cx, cy = size / 2, size / 2
+    r_max = size * 0.36
+    r_lbl = size * 0.47
+
+    angles = [math.pi / 2 - 2 * math.pi * i / n for i in range(n)]
+
+    def pt(val, angle):
+        ratio = val / 5.0
+        return cx + r_max * ratio * math.cos(angle), cy - r_max * ratio * math.sin(angle)
+
+    # Griglia
+    grid = ""
+    for level in range(1, 6):
+        pts = [pt(level, a) for a in angles]
+        path = " ".join([f"{'M' if i==0 else 'L'}{x:.1f},{y:.1f}" for i,(x,y) in enumerate(pts)]) + " Z"
+        grid += f'<path d="{path}" fill="none" stroke="#e2e8f0" stroke-width="1"/>'
+
+    # Assi
+    axes = ""
+    for angle in angles:
+        x2, y2 = pt(5, angle)
+        axes += f'<line x1="{cx}" y1="{cy}" x2="{x2:.1f}" y2="{y2:.1f}" stroke="#e2e8f0" stroke-width="1"/>'
+
+    # Poligoni
+    poly_a = " ".join([f"{x:.1f},{y:.1f}" for x,y in [pt(v,a) for v,a in zip(vals_a,angles)]])
+    poly_b = " ".join([f"{x:.1f},{y:.1f}" for x,y in [pt(v,a) for v,a in zip(vals_b,angles)]])
+
+    # Labels
+    lbls = ""
+    for i, (angle, lbl) in enumerate(zip(angles, labels)):
+        lx = cx + r_lbl * math.cos(angle)
+        ly = cy - r_lbl * math.sin(angle)
+        anchor = "middle"
+        if lx < cx - 8: anchor = "end"
+        elif lx > cx + 8: anchor = "start"
+        short = lbl[:11]
+        lbls += f'<text x="{lx:.1f}" y="{ly:.1f}" text-anchor="{anchor}" dominant-baseline="middle" font-family="Plus Jakarta Sans,system-ui" font-size="9" fill="#475569" font-weight="500">{short}</text>'
+
+    # Legenda
+    legend = f"""
+    <rect x="8" y="{size-26}" width="10" height="10" rx="2" fill="#14b8a6" opacity="0.7"/>
+    <text x="22" y="{size-18}" font-family="Plus Jakarta Sans,system-ui" font-size="9" fill="#475569">{title_a}</text>
+    <rect x="{int(size*0.5)+8}" y="{size-26}" width="10" height="10" rx="2" fill="#0f3460" opacity="0.5"/>
+    <text x="{int(size*0.5)+22}" y="{size-18}" font-family="Plus Jakarta Sans,system-ui" font-size="9" fill="#475569">{title_b}</text>"""
+
+    svg = f"""<svg width="{size}" height="{size}" viewBox="0 0 {size} {size}" xmlns="http://www.w3.org/2000/svg">
+      {grid}{axes}
+      <polygon points="{poly_a}" fill="#14b8a6" fill-opacity="0.25" stroke="#14b8a6" stroke-width="2"/>
+      <polygon points="{poly_b}" fill="#0f3460" fill-opacity="0.15" stroke="#0f3460" stroke-width="1.5" stroke-dasharray="4,2"/>
+      {lbls}{legend}
+    </svg>"""
+
+    # FIX: usa components.html per SVG complessi
+    components.html(
+        f'<div style="display:flex;justify-content:center;align-items:center;">{svg}</div>',
+        height=size + 10
+    )
+
+def load_data(p, m):
+    return pd.read_csv(p), pd.read_csv(m)
 
 def pct(x):
     try: return float(x)
     except: return 0.0
 
 
-# ----------------------------
-# Hero Section
-# ----------------------------
+# ============================================================
+# HERO
+# ============================================================
 st.markdown("""
 <div class="hero">
   <div class="hero-title">Co-living Compatibility Engine</div>
@@ -386,67 +481,59 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 
-# ----------------------------
-# Sidebar
-# ----------------------------
+# ============================================================
+# SIDEBAR
+# ============================================================
 with st.sidebar:
     st.markdown("### ⚙️ Settings")
-    top_n = st.slider("Top N matches to show", min_value=3, max_value=10, value=5, step=1)
-
+    top_n = st.slider("Top N matches to show", min_value=1, max_value=15, value=5, step=1)
     st.divider()
     st.markdown("### 📖 How it works")
     st.markdown("""
-Each tenant profile has **10 behavioral variables** scored 1–5.
+Each tenant has **10 behavioral variables** (1–5).
 
-The engine computes a **compatibility score (0–100%)** using:
-- **Similarity** — rewards similar values (e.g. sleep schedule, cleanliness)
-- **Complementarity** — rewards balanced pairs (e.g. sociability, shared spaces)
+Compatibility score uses:
+- **Similarity** — closer = better (cleanliness, sleep…)
+- **Complementarity** — balanced = better (sociability…)
 
-Each variable has a **weight** reflecting its importance in daily co-living friction.
-
-The **Top Drivers** show which variables influenced the match most.
+Variables have different **weights** based on friction impact.
     """)
-
     st.divider()
     st.markdown("### 📁 Data source")
     use_upload = st.checkbox("Upload custom CSV files", value=False)
 
 
-# ----------------------------
-# Load data
-# ----------------------------
-profiles_path = "synthetic_profiles_v2.csv"
-matches_path = "top_matches_explained_v2.csv"
-profiles, matches = None, None
-
+# ============================================================
+# LOAD DATA
+# ============================================================
 try:
     if use_upload:
         up_p = st.sidebar.file_uploader("synthetic_profiles_v2.csv", type=["csv"])
         up_m = st.sidebar.file_uploader("top_matches_explained_v2.csv", type=["csv"])
         if up_p is None or up_m is None:
-            st.info("Upload both CSV files to continue, or uncheck the option above.")
+            st.info("Upload both CSV files, or uncheck the option above.")
             st.stop()
         profiles = pd.read_csv(up_p)
-        matches = pd.read_csv(up_m)
+        matches  = pd.read_csv(up_m)
     else:
-        profiles, matches = load_data(profiles_path, matches_path)
+        profiles, matches = load_data("synthetic_profiles_v2.csv", "top_matches_explained_v2.csv")
 except Exception as e:
     st.error(f"Error loading data: {e}")
     st.stop()
 
 
-# ----------------------------
-# Tabs
-# ----------------------------
+# ============================================================
+# TABS
+# ============================================================
 tab1, tab2 = st.tabs(["🔍 Explore Profiles", "✏️ Try It Yourself"])
 
 
 # ============================================================
-# TAB 1 — Explore existing profiles
+# TAB 1 — Explore Profiles
 # ============================================================
 with tab1:
     st.markdown('<div class="section-title">Explore Tenant Profiles</div>', unsafe_allow_html=True)
-    st.markdown('<div class="section-sub">Select a synthetic tenant and explore their top compatibility matches.</div>', unsafe_allow_html=True)
+    st.markdown('<div class="section-sub">Select a tenant and explore their top matches — computed live.</div>', unsafe_allow_html=True)
 
     tenant_list = sorted(profiles["tenant_label"].unique().tolist())
     selected_tenant = st.selectbox("Select a tenant", tenant_list, index=0, label_visibility="collapsed")
@@ -458,172 +545,200 @@ with tab1:
 
     # Profile card
     st.markdown('<div class="profile-box">', unsafe_allow_html=True)
-    col_av, col_data = st.columns([1, 6], gap="medium")
+    col_av, col_data = st.columns([1, 5], gap="large")
     with col_av:
-        st.image(avatar_url(selected_tenant, size=120), width=88)
+        st.image(avatar_url(selected_tenant, size=120), width=104)
+        st.markdown(
+            f"<div style='text-align:center;font-weight:700;font-size:0.9rem;margin-top:0.5rem;color:#0f3460'>"
+            f"{selected_tenant}</div>",
+            unsafe_allow_html=True
+        )
     with col_data:
-        st.markdown(f"**{selected_tenant}**")
-        display_row = sel_row.drop(columns=["user_id"], errors="ignore").copy()
-        st.dataframe(display_row, use_container_width=True, hide_index=True)
+        for f in FEATURES:
+            val = int(sel_row[f].values[0])
+            lbl, _ = FEATURE_LABELS[f]
+            render_segments(val, FEATURE_COLORS[f], label=lbl)
     st.markdown('</div>', unsafe_allow_html=True)
 
-    # Matches
-    sub = matches[matches["tenant_label"] == selected_tenant].copy()
-    if sub.empty:
-        st.warning("No matches found for this tenant.")
-        st.stop()
-
-    sub["compatibility_score"] = sub["compatibility_score"].apply(pct)
-    sub = sub.sort_values("compatibility_score", ascending=False).head(top_n)
+    # Calcolo match LIVE
+    live_results = compute_matches_from_profile(sel_row.iloc[0], profiles, top_n=top_n)
 
     st.markdown('<div class="section-title">Top Matches</div>', unsafe_allow_html=True)
-    st.markdown(f'<div class="section-sub">Best {top_n} compatibility matches for {selected_tenant}</div>', unsafe_allow_html=True)
+    st.markdown(
+        f'<div class="section-sub">Best {top_n} matches for {selected_tenant} — computed live</div>',
+        unsafe_allow_html=True
+    )
 
-    for rank, (_, r) in enumerate(sub.iterrows(), start=1):
-        match_label = r.get("match_tenant_label", "")
-        score = float(r.get("compatibility_score", 0.0))
-        short = str(r.get("explanation_short", "")).strip()
-        drivers_raw = str(r.get("top_drivers", "")).strip()
-        driver_vals = str(r.get("top_driver_values", "")).strip()
-        long_exp = str(r.get("explanation_long", "")).strip()
+    # Radar best match
+    if live_results:
+        best = live_results[0]
+        best_row = profiles[profiles["tenant_label"] == best["label"]].iloc[0]
+        vals_a = [int(sel_row[f].values[0]) for f in FEATURES]
+        vals_b = [int(best_row[f]) for f in FEATURES]
+        short_labels = [FEATURE_LABELS[f][0].split(" ", 1)[1] for f in FEATURES]
 
-        # Parse driver names for tags
-        driver_names = []
-        for part in drivers_raw.split(";"):
-            part = part.strip()
-            if "(" in part:
-                driver_names.append(part.split("(")[0].strip().replace("_", " ").capitalize())
+        with st.expander("📡 Radar — profile comparison with best match", expanded=True):
+            rc1, rc2 = st.columns([1, 1], gap="large")
+            with rc1:
+                render_radar(vals_a, vals_b, short_labels,
+                             title_a=selected_tenant[:12], title_b=best["label"][:12])
+            with rc2:
+                st.markdown(f"**{selected_tenant}** vs **{best['label']}**")
+                st.markdown(f"Compatibility: **{best['score']:.1f}%**")
+                st.divider()
+                for f in FEATURES:
+                    va = int(sel_row[f].values[0])
+                    vb = int(best_row[f])
+                    lbl, _ = FEATURE_LABELS[f]
+                    render_segments(va, FEATURE_COLORS[f], label=lbl, val_b=vb)
+
+    # Lista match
+    for rank, m in enumerate(live_results, start=1):
+        label = m["label"]
+        score = m["score"]
+        top3  = m["top3"]
+        driver_tags = "".join([
+            f'<span class="driver-tag">{prettify(f)}</span>'
+            for f, sc, w, mode in top3
+        ])
+        driver_text = ", ".join([prettify(f) for f, sc, w, mode in top3])
+        match_row = profiles[profiles["tenant_label"] == label].iloc[0]
 
         with st.container():
             st.markdown('<div class="match-card">', unsafe_allow_html=True)
             c1, c2, c3 = st.columns([1, 5, 2], gap="medium")
-
             with c1:
-                st.image(avatar_url(match_label, size=96), width=68)
-
+                st.image(avatar_url(label, size=96), width=72)
             with c2:
-                st.markdown(f'<div class="match-name">#{rank} &nbsp; {match_label}</div>', unsafe_allow_html=True)
-                st.markdown(f'<div class="match-score-text">Compatibility score: <strong>{score:.1f}%</strong></div>', unsafe_allow_html=True)
-                if driver_names:
-                    tags_html = "".join([f'<span class="driver-tag">{d}</span>' for d in driver_names])
-                    st.markdown(f"<div style='margin-top:0.5rem'>Top drivers: {tags_html}</div>", unsafe_allow_html=True)
-                if short:
-                    st.markdown(f'<div class="explanation-box">{short}</div>', unsafe_allow_html=True)
-
+                st.markdown(f'<div class="match-name">#{rank} &nbsp; {label}</div>', unsafe_allow_html=True)
+                st.markdown(f'<div class="match-score-text">Compatibility: <strong>{score:.1f}%</strong></div>', unsafe_allow_html=True)
+                st.markdown(f"<div style='margin-top:0.4rem'>Top drivers: {driver_tags}</div>", unsafe_allow_html=True)
+                st.markdown(
+                    f'<div class="explanation-box">High compatibility driven by {driver_text}.</div>',
+                    unsafe_allow_html=True
+                )
             with c3:
                 st.markdown(
-                    f"<div style='display:flex;justify-content:flex-end;align-items:center;height:100%'>{donut_svg(score)}</div>",
-                    unsafe_allow_html=True,
+                    f"<div style='display:flex;justify-content:flex-end;align-items:center;height:100%'>"
+                    f"{donut_svg(score)}</div>",
+                    unsafe_allow_html=True
                 )
             st.markdown('</div>', unsafe_allow_html=True)
 
-            with st.expander("📋 Full explanation & variable breakdown"):
-                if long_exp:
-                    st.write(long_exp)
-                if driver_vals:
-                    st.markdown("**Top driver values:**")
-                    for item in driver_vals.split("|"):
-                        st.markdown(f"- {item.strip()}")
+            with st.expander("📋 Variable breakdown"):
+                for f, sc, w, mode in m["all_details"]:
+                    va = int(sel_row[f].values[0])
+                    vb = int(match_row[f])
+                    lbl, _ = FEATURE_LABELS[f]
+                    mode_icon = "≈" if mode == "similarity" else "⇄"
+                    render_segments(va, FEATURE_COLORS[f], label=f"{lbl} {mode_icon}", val_b=vb)
+                st.caption("≈ similarity (closer = better) · ⇄ complementarity (balanced = better) · grey = their value")
 
 
 # ============================================================
-# TAB 2 — Try It Yourself (live questionnaire)
+# TAB 2 — Try It Yourself
 # ============================================================
 with tab2:
     st.markdown("""
     <div class="questionnaire-header">
       <div class="questionnaire-title">Find Your Co-living Matches</div>
-      <div class="questionnaire-sub">Answer 10 quick questions about your lifestyle and see your top compatibility matches in real time.</div>
+      <div class="questionnaire-sub">Answer 10 quick questions · See your matches in real time</div>
     </div>
     """, unsafe_allow_html=True)
 
-    st.markdown('<div class="section-sub">Rate each variable from 1 to 5 using the sliders below.</div>', unsafe_allow_html=True)
-
     user_values = {}
-
-    # Display sliders in 2 columns for a cleaner layout
     col_left, col_right = st.columns(2, gap="large")
-    features_left = FEATURES[:5]
-    features_right = FEATURES[5:]
 
     with col_left:
-        for f in features_left:
-            label, desc = FEATURE_LABELS[f]
-            st.markdown(f"**{label}**")
+        for f in FEATURES[:5]:
+            lbl, desc = FEATURE_LABELS[f]
+            st.markdown(f"**{lbl}**")
             st.caption(desc)
-            user_values[f] = st.slider(
-                label, min_value=1, max_value=5, value=3,
-                key=f"q_{f}", label_visibility="collapsed"
-            )
+            user_values[f] = st.slider(lbl, 1, 5, 3, key=f"q_{f}", label_visibility="collapsed")
 
     with col_right:
-        for f in features_right:
-            label, desc = FEATURE_LABELS[f]
-            st.markdown(f"**{label}**")
+        for f in FEATURES[5:]:
+            lbl, desc = FEATURE_LABELS[f]
+            st.markdown(f"**{lbl}**")
             st.caption(desc)
-            user_values[f] = st.slider(
-                label, min_value=1, max_value=5, value=3,
-                key=f"q_{f}", label_visibility="collapsed"
-            )
+            user_values[f] = st.slider(lbl, 1, 5, 3, key=f"q_{f}", label_visibility="collapsed")
 
     st.divider()
-
-    # --- Compute and show results ---
     st.markdown('<div class="section-title">Your Top Matches</div>', unsafe_allow_html=True)
-    st.markdown('<div class="section-sub">Based on your answers, these are your most compatible co-living candidates from our database.</div>', unsafe_allow_html=True)
+    st.markdown(
+        '<div class="section-sub">Computed live against all 300 profiles in the database.</div>',
+        unsafe_allow_html=True
+    )
 
     live_matches = compute_matches_for_user(user_values, profiles, top_n=top_n)
 
+    # Radar Tab2
+    if live_matches:
+        best2 = live_matches[0]
+        best2_row = profiles[profiles["tenant_label"] == best2["label"]].iloc[0]
+        vals_u  = [user_values[f] for f in FEATURES]
+        vals_b2 = [int(best2_row[f]) for f in FEATURES]
+        short_labels2 = [FEATURE_LABELS[f][0].split(" ", 1)[1] for f in FEATURES]
+
+        with st.expander("📡 Radar — your profile vs best match", expanded=True):
+            rc1, rc2 = st.columns([1, 1], gap="large")
+            with rc1:
+                render_radar(vals_u, vals_b2, short_labels2,
+                             title_a="You", title_b=best2["label"][:12])
+            with rc2:
+                st.markdown(f"**You** vs **{best2['label']}**")
+                st.markdown(f"Compatibility: **{best2['score']:.1f}%**")
+                st.divider()
+                for f in FEATURES:
+                    vu = user_values[f]
+                    vb = int(best2_row[f])
+                    lbl, _ = FEATURE_LABELS[f]
+                    render_segments(vu, FEATURE_COLORS[f], label=lbl, val_b=vb)
+
+    # Lista match Tab2
     for rank, m in enumerate(live_matches, start=1):
         label = m["label"]
         score = m["score"]
-        top3 = m["top3"]
-
+        top3  = m["top3"]
         driver_tags = "".join([
             f'<span class="driver-tag">{prettify(f)}</span>'
             for f, sc, w, mode in top3
         ])
+        match_row = profiles[profiles["tenant_label"] == label].iloc[0]
 
         with st.container():
             st.markdown('<div class="match-card">', unsafe_allow_html=True)
             c1, c2, c3 = st.columns([1, 5, 2], gap="medium")
-
             with c1:
-                st.image(avatar_url(label, size=96), width=68)
-
+                st.image(avatar_url(label, size=96), width=72)
             with c2:
                 st.markdown(f'<div class="match-name">#{rank} &nbsp; {label}</div>', unsafe_allow_html=True)
-                st.markdown(f'<div class="match-score-text">Compatibility score: <strong>{score:.1f}%</strong></div>', unsafe_allow_html=True)
-                st.markdown(f"<div style='margin-top:0.5rem'>Top drivers: {driver_tags}</div>", unsafe_allow_html=True)
-
-                # Show variable comparison for top3
-                comparison_lines = []
-                for f, sc, w, mode in top3:
-                    your_val = user_values[f]
-                    their_val = int(profiles[profiles["tenant_label"] == label][f].values[0])
-                    mode_icon = "≈" if mode == "similarity" else "⇄"
-                    comparison_lines.append(
-                        f"**{prettify(f)}**: You {your_val} {mode_icon} Them {their_val} &nbsp; _(score: {sc:.2f})_"
-                    )
-                with st.expander("📋 Variable breakdown"):
-                    for line in comparison_lines:
-                        st.markdown(f"- {line}")
-                    st.caption("≈ = similarity (closer is better) · ⇄ = complementarity (balanced is better)")
-
+                st.markdown(f'<div class="match-score-text">Compatibility: <strong>{score:.1f}%</strong></div>', unsafe_allow_html=True)
+                st.markdown(f"<div style='margin-top:0.4rem'>Top drivers: {driver_tags}</div>", unsafe_allow_html=True)
             with c3:
                 st.markdown(
-                    f"<div style='display:flex;justify-content:flex-end;align-items:center;height:100%'>{donut_svg(score)}</div>",
-                    unsafe_allow_html=True,
+                    f"<div style='display:flex;justify-content:flex-end;align-items:center;height:100%'>"
+                    f"{donut_svg(score)}</div>",
+                    unsafe_allow_html=True
                 )
             st.markdown('</div>', unsafe_allow_html=True)
 
+            with st.expander("📋 Variable breakdown"):
+                for f, sc, w, mode in m["all_details"]:
+                    vu = user_values[f]
+                    vb = int(match_row[f])
+                    lbl, _ = FEATURE_LABELS[f]
+                    mode_icon = "≈" if mode == "similarity" else "⇄"
+                    render_segments(vu, FEATURE_COLORS[f], label=f"{lbl} {mode_icon}", val_b=vb)
+                st.caption("≈ similarity · ⇄ complementarity · grey = their value")
 
-# ----------------------------
-# Footer
-# ----------------------------
+
+# ============================================================
+# FOOTER
+# ============================================================
 st.markdown("""
 <div class="footer">
-    Co-living Compatibility Engine · Prototype v2 · Built on synthetic data<br>
-    In production: real tenant profiles, feedback loops, and adaptive weight tuning.
+    Co-living Compatibility Engine · Prototype v3 · Built on synthetic data<br>
+    In production: real tenant profiles, feedback loops, adaptive weight tuning.
 </div>
 """, unsafe_allow_html=True)
