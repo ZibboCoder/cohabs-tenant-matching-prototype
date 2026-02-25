@@ -35,6 +35,7 @@ html, body, [class*="css"] {
 
 .block-container { padding: 2rem 3rem 3rem 3rem !important; max-width: 1200px; }
 
+/* HERO */
 .hero {
     background: linear-gradient(135deg, #0f3460 0%, #0d7377 55%, #14b8a6 100%);
     border-radius: 20px; padding: 3rem 3.5rem; margin-bottom: 2rem;
@@ -54,40 +55,112 @@ html, body, [class*="css"] {
     color:#e0fdf4; padding:0.35rem 0.9rem; border-radius:20px;
     font-size:0.78rem; font-weight:600; backdrop-filter:blur(8px); }
 
-.section-title { font-family:'Fraunces',serif; font-size:1.5rem; color:#0f3460;
-    margin:2rem 0 0.25rem 0; }
-.section-sub { font-size:0.88rem; color:#64748b; margin-bottom:1.25rem; }
+/* SECTION HEADERS */
+.section-title {
+    font-family:'Fraunces',serif; font-size:1.65rem; color:#0f3460;
+    margin:2.5rem 0 0.2rem 0; letter-spacing:-0.02em; font-weight:700;
+}
+.section-sub { font-size:0.85rem; color:#64748b; margin-bottom:1.4rem; }
 
-.match-card { background:#fff; border:1px solid #e2e8f0; border-radius:14px;
-    padding:1.25rem 1.5rem; margin-bottom:1rem;
-    box-shadow:0 1px 4px rgba(15,52,96,0.06); }
-.profile-box { background:#fff; border:1px solid #e2e8f0; border-radius:14px;
+/* CARDS */
+.profile-box {
+    background:#fff; border:1px solid #e2e8f0; border-radius:16px;
     padding:1.5rem 1.75rem; margin-bottom:1.5rem;
-    box-shadow:0 1px 4px rgba(15,52,96,0.06); }
+    box-shadow:0 2px 16px rgba(15,52,96,0.07);
+}
+.match-card {
+    background:#fff; border:1px solid #e8eef4; border-left:3px solid #14b8a6;
+    border-radius:14px; padding:1.4rem 1.6rem; margin-bottom:0.85rem;
+    box-shadow:0 2px 14px rgba(15,52,96,0.08), 0 1px 3px rgba(15,52,96,0.04);
+}
 
-.match-name { font-size:1.05rem; font-weight:700; color:#0f3460; margin:0 0 0.15rem 0; }
+/* MATCH CARD TYPOGRAPHY */
+.match-name { font-size:1.1rem; font-weight:700; color:#0f3460; margin:0 0 0.2rem 0; }
 .match-score-text { font-size:0.83rem; color:#64748b; margin:0; }
+.rank-pill {
+    display:inline-flex; align-items:center; justify-content:center;
+    width:26px; height:26px; background:#0f3460; color:#fff; border-radius:50%;
+    font-size:0.68rem; font-weight:700; margin-right:0.45rem; vertical-align:middle;
+    flex-shrink:0;
+}
 
 .driver-tag { display:inline-block; background:#f0fdfa; color:#0d7377;
     border:1px solid #99f6e4; padding:0.2rem 0.65rem; border-radius:6px;
     font-size:0.73rem; font-weight:600; margin:0.15rem 0.1rem; }
 
 .explanation-box { background:#f0fdfa; border-left:3px solid #14b8a6;
-    border-radius:0 8px 8px 0; padding:0.75rem 1rem;
-    font-size:0.83rem; color:#134e4a; margin-top:0.75rem; }
+    border-radius:0 8px 8px 0; padding:0.7rem 1rem;
+    font-size:0.82rem; color:#134e4a; margin-top:0.65rem; font-weight:500; }
 
+/* QUESTIONNAIRE */
 .questionnaire-header { background:linear-gradient(135deg,#f0fdfa,#ccfbf1);
     border:1px solid #99f6e4; border-radius:14px; padding:1.5rem 2rem; margin-bottom:1.5rem; }
 .questionnaire-title { font-family:'Fraunces',serif; font-size:1.4rem;
     color:#0f3460; margin:0 0 0.3rem 0; }
 .questionnaire-sub { font-size:0.88rem; color:#0d7377; margin:0; }
 
-section[data-testid="stSidebar"] { background:#f8fffe !important; border-right:1px solid #e2e8f0; }
-section[data-testid="stSidebar"] .block-container { padding:1.5rem 1.25rem !important; }
+/* SIDEBAR — dark navy settings panel */
+section[data-testid="stSidebar"] {
+    background: linear-gradient(180deg, #091f3a 0%, #0d2a47 100%) !important;
+    border-right: none !important;
+}
+section[data-testid="stSidebar"] .block-container {
+    padding: 2rem 1.4rem 2rem 1.4rem !important;
+}
+section[data-testid="stSidebar"] h3 {
+    color: #14b8a6 !important;
+    font-size: 0.7rem !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.12em !important;
+    font-weight: 700 !important;
+    margin: 0 0 0.65rem 0 !important;
+    font-family: 'Plus Jakarta Sans', sans-serif !important;
+}
+section[data-testid="stSidebar"] p,
+section[data-testid="stSidebar"] li {
+    color: #94a3b8 !important;
+    font-size: 0.82rem !important;
+    line-height: 1.65 !important;
+}
+section[data-testid="stSidebar"] strong { color: #e0fdf4 !important; }
+section[data-testid="stSidebar"] hr {
+    border-color: rgba(255,255,255,0.07) !important;
+    margin: 1.1rem 0 !important;
+}
+section[data-testid="stSidebar"] label,
+section[data-testid="stSidebar"] [data-testid="stWidgetLabel"] p {
+    color: #cbd5e1 !important;
+}
+section[data-testid="stSidebar"] [data-testid="stCheckbox"] label p {
+    color: #94a3b8 !important;
+}
 
+/* TABS */
 .stTabs [data-baseweb="tab-list"] { gap:0.5rem; background:transparent; }
 .stTabs [data-baseweb="tab"] { border-radius:8px 8px 0 0; font-weight:600; font-size:0.88rem; }
 
+/* EXPANDERS */
+[data-testid="stExpander"] {
+    border: 1px solid #e2e8f0 !important;
+    border-radius: 14px !important;
+    background: #ffffff !important;
+    box-shadow: 0 2px 12px rgba(15,52,96,0.07) !important;
+    margin-bottom: 0.75rem !important;
+    overflow: hidden !important;
+}
+[data-testid="stExpander"] summary {
+    font-weight: 600 !important;
+    color: #0f3460 !important;
+    padding: 0.9rem 1.25rem !important;
+    background: #ffffff !important;
+    font-size: 0.9rem !important;
+}
+[data-testid="stExpander"] summary:hover { background: #f8fffe !important; }
+[data-testid="stExpander"] > div:last-child {
+    padding: 0.25rem 1.25rem 1.25rem 1.25rem !important;
+}
+
+/* FOOTER */
 .footer { text-align:center; font-size:0.76rem; color:#94a3b8;
     margin-top:3rem; padding-top:1.5rem; border-top:1px solid #e2e8f0; }
 hr { border-color:#e2e8f0; margin:1.5rem 0; }
@@ -173,7 +246,7 @@ def match_from_user(vals, df, top_n=5):
 
 
 # ============================================================
-# HTML HELPERS — tutto costruito come stringa, st.markdown UNA VOLTA
+# HTML HELPERS — always return strings; st.markdown called from outside
 # ============================================================
 def avatar_url(label, size=128):
     seed = urllib.parse.quote(label)
@@ -195,7 +268,6 @@ def donut_svg(p, size=80, stroke=9):
             f' font-weight="700" fill="#0f3460">{p:.0f}%</text></svg>')
 
 def seg_row_html(val, color, empty_color, height=9):
-    """Una riga di 5 segmenti."""
     segs = ""
     for i in range(1, 6):
         bg = color if i <= val else empty_color
@@ -203,11 +275,7 @@ def seg_row_html(val, color, empty_color, height=9):
     return f'<div style="display:flex;flex:1;">{segs}</div>'
 
 def single_var_html(label_txt, val_a, val_b=None, mode_icon=""):
-    """
-    HTML per una singola variabile con barre a segmenti.
-    val_b opzionale = valore del match a confronto.
-    Restituisce stringa HTML — chiamare con st.markdown(html, unsafe_allow_html=True).
-    """
+    """Returns HTML for one variable row with segment bars. Call st.markdown from outside."""
     row_a = seg_row_html(val_a, TEAL, GREY_SEG, height=9)
     you_lbl = '<span style="font-size:0.62rem;color:#64748b;width:30px;flex-shrink:0;"></span>'
 
@@ -236,13 +304,18 @@ def single_var_html(label_txt, val_a, val_b=None, mode_icon=""):
         f'</div>'
     )
 
+def vars_col_html(features_vals_a, features_vals_b=None, show_mode=False):
+    """Returns HTML for a single column of variable rows. Pass to st.markdown from outside."""
+    h = ""
+    for f, va in features_vals_a:
+        lbl, _ = FEATURE_LABELS[f]
+        vb = features_vals_b.get(f) if features_vals_b else None
+        mode_icon = "≈" if (show_mode and SCORING_MODE.get(f) == "similarity") else ("⇄" if show_mode else "")
+        h += single_var_html(lbl, va, val_b=vb, mode_icon=mode_icon)
+    return h
+
 def vars_grid_html(features_vals_a, features_vals_b=None, show_mode=False):
-    """
-    Griglia 2 colonne di variabili.
-    features_vals_a: list of (feature, val_a)
-    features_vals_b: dict feature->val_b opzionale
-    Restituisce HTML completo da passare a st.markdown.
-    """
+    """Returns 2-column HTML grid of variables. Pass to st.markdown from outside."""
     n = len(features_vals_a)
     mid = math.ceil(n / 2)
     left  = features_vals_a[:mid]
@@ -253,37 +326,108 @@ def vars_grid_html(features_vals_a, features_vals_b=None, show_mode=False):
         for f, va in items:
             lbl, _ = FEATURE_LABELS[f]
             vb = features_vals_b.get(f) if features_vals_b else None
-            mode_icon = ""
-            if show_mode:
-                mode_icon = "≈" if SCORING_MODE.get(f) == "similarity" else "⇄"
+            mode_icon = "≈" if (show_mode and SCORING_MODE.get(f) == "similarity") else ("⇄" if show_mode else "")
             h += single_var_html(lbl, va, val_b=vb, mode_icon=mode_icon)
         return h
 
-    lh = col_html(left)
-    rh = col_html(right)
-
     return (
         f'<div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem 2rem;margin-top:0.5rem;">'
-        f'<div>{lh}</div>'
-        f'<div>{rh}</div>'
+        f'<div>{col_html(left)}</div>'
+        f'<div>{col_html(right)}</div>'
         f'</div>'
     )
 
+def radar_info_html(name_a, name_b, score):
+    """Returns HTML block: big score number + match quality + tenant names. Pass to st.markdown from outside."""
+    color = TEAL if score >= 80 else "#0d7377" if score >= 60 else "#f59e0b" if score >= 40 else "#ef4444"
+    quality = "Excellent match" if score >= 85 else "Good match" if score >= 70 else "Moderate match"
+    return (
+        f'<div style="padding:1.5rem 0 0 0.5rem;">'
+        f'<div style="font-family:Fraunces,serif;font-size:3.8rem;font-weight:800;color:{color};line-height:1;">{score:.0f}%</div>'
+        f'<div style="font-size:0.72rem;font-weight:700;color:#64748b;margin:0.2rem 0 1.5rem 0;text-transform:uppercase;letter-spacing:0.1em;">{quality}</div>'
+        f'<div style="display:flex;align-items:center;gap:8px;margin-bottom:0.6rem;">'
+        f'<div style="width:10px;height:10px;background:{TEAL};border-radius:2px;flex-shrink:0;"></div>'
+        f'<span style="font-size:0.9rem;font-weight:600;color:#0f3460;">{name_a}</span>'
+        f'</div>'
+        f'<div style="display:flex;align-items:center;gap:8px;">'
+        f'<div style="width:10px;height:10px;background:#0f3460;border-radius:2px;flex-shrink:0;opacity:0.55;"></div>'
+        f'<span style="font-size:0.9rem;font-weight:600;color:#0f3460;">{name_b}</span>'
+        f'</div>'
+        f'<div style="margin-top:1.25rem;padding:0.65rem 0.8rem;background:#f8fffe;border-radius:8px;border:1px solid #ccfbf1;">'
+        f'<span style="font-size:0.76rem;color:#0d7377;line-height:1.55;">Teal = {name_a} &nbsp;·&nbsp; Dashed = {name_b}<br>Overlap = compatibility &nbsp;·&nbsp; Spikes = differences</span>'
+        f'</div>'
+        f'</div>'
+    )
+
+def verbal_explanation_html(name_a, name_b, score, all_details, vals_a_dict, vals_b_dict):
+    """
+    Returns a simple HTML explanation of the match.
+    Uses only div/p/b/span — no ul/li, max 2 nesting levels.
+    Pass to st.markdown from outside.
+    """
+    strong, weak = [], []
+    for f, sc, w, mode in all_details:
+        va = vals_a_dict[f]
+        vb = vals_b_dict[f]
+        lbl = FEATURE_LABELS[f][0].split(" ", 1)[1]
+        if sc >= 0.75:
+            strong.append((lbl, va, vb, mode))
+        elif sc < 0.50:
+            weak.append((lbl, va, vb, mode))
+
+    if score >= 85:
+        intro = (f"<b>{name_a}</b> and <b>{name_b}</b> are an excellent match ({score:.1f}%). "
+                 f"Very similar lifestyles across most dimensions — typically low friction and a positive co-living experience.")
+    elif score >= 70:
+        intro = (f"<b>{name_a}</b> and <b>{name_b}</b> are a good match ({score:.1f}%). "
+                 f"Well aligned on several key dimensions, with only a few areas needing adaptation.")
+    else:
+        intro = (f"<b>{name_a}</b> and <b>{name_b}</b> have moderate compatibility ({score:.1f}%). "
+                 f"There are meaningful differences worth discussing before placement.")
+
+    strengths_html = ""
+    if strong:
+        rows = "".join([
+            f"<span style='display:block;padding:2px 0;'><b>{lbl}</b>: {va}/5 vs {vb}/5 — "
+            f"{'very similar' if mode == 'similarity' else 'well balanced'}</span>"
+            for lbl, va, vb, mode in strong[:3]
+        ])
+        strengths_html = (
+            f"<p style='margin:10px 0 3px 0;font-size:0.72rem;font-weight:700;color:#0d7377;"
+            f"text-transform:uppercase;letter-spacing:0.07em;'>Strong alignments</p>"
+            f"<div style='font-size:0.81rem;color:#334155;line-height:1.7;'>{rows}</div>"
+        )
+
+    tension_html = ""
+    if weak:
+        rows = "".join([
+            f"<span style='display:block;padding:2px 0;'><b>{lbl}</b>: {va}/5 vs {vb}/5 — "
+            f"{'different preferences, worth discussing' if mode == 'similarity' else 'similar energy, may compete for shared spaces'}</span>"
+            for lbl, va, vb, mode in weak[:2]
+        ])
+        tension_html = (
+            f"<p style='margin:10px 0 3px 0;font-size:0.72rem;font-weight:700;color:#b45309;"
+            f"text-transform:uppercase;letter-spacing:0.07em;'>Areas to watch</p>"
+            f"<div style='font-size:0.81rem;color:#334155;line-height:1.7;'>{rows}</div>"
+        )
+
+    return (
+        f"<div style='background:#f8fffe;border:1px solid #ccfbf1;border-radius:10px;"
+        f"padding:0.9rem 1.1rem;margin-top:1rem;'>"
+        f"<p style='margin:0;font-size:0.82rem;color:#1a2332;line-height:1.65;'>{intro}</p>"
+        f"{strengths_html}"
+        f"{tension_html}"
+        f"</div>"
+    )
+
 def radar_html(vals_a, vals_b, labels, title_a="Tenant", title_b="Best match", size=400):
-    """
-    SVG radar chart — canvas expanded with horizontal/vertical padding so all
-    10 labels are fully visible even for near-horizontal axes (cos≈0.95).
-    The radar polygon coordinate space stays size×size; the SVG element is
-    wider/taller to give room for label text that extends beyond the radar area.
-    """
     n = len(vals_a)
-    # Padding around the radar polygon to accommodate label text
-    pad_h, pad_v = 120, 50          # extra pixels left/right and top/bottom
-    svg_w = size + 2 * pad_h        # total SVG width  (e.g. 640)
-    svg_h = size + 2 * pad_v        # total SVG height (e.g. 500)
-    cx, cy = svg_w / 2, svg_h / 2  # radar centre in the expanded canvas
-    r_max = size * 0.30             # polygon max radius (unchanged)
-    r_lbl = size * 0.47             # label distance from centre (unchanged)
+    pad_h, pad_v = 120, 50
+    svg_w = size + 2 * pad_h
+    svg_h = size + 2 * pad_v
+    cx, cy = svg_w / 2, svg_h / 2
+    r_max = size * 0.30
+    r_lbl = size * 0.47
     angles = [math.pi/2 - 2*math.pi*i/n for i in range(n)]
 
     def pt(val, angle):
@@ -294,7 +438,6 @@ def radar_html(vals_a, vals_b, labels, title_a="Tenant", title_b="Best match", s
         r = r_lbl + extra
         return cx + r*math.cos(angle), cy - r*math.sin(angle)
 
-    # Grid polygons — levels 1-5
     grid = ""
     for level in range(1, 6):
         pts = [pt(level, a) for a in angles]
@@ -303,30 +446,25 @@ def radar_html(vals_a, vals_b, labels, title_a="Tenant", title_b="Best match", s
         sw = "1" if level == 5 else "0.7"
         grid += f'<path d="{path}" fill="none" stroke="#94a3b8" stroke-width="{sw}" stroke-opacity="{op}"/>'
 
-    # Axes
     axes = "".join([
         f'<line x1="{cx:.1f}" y1="{cy:.1f}" x2="{pt(5,a)[0]:.1f}" y2="{pt(5,a)[1]:.1f}" stroke="#cbd5e1" stroke-width="0.8"/>'
         for a in angles
     ])
 
-    # Filled polygons
     pts_a = [pt(v, a) for v, a in zip(vals_a, angles)]
     pts_b = [pt(v, a) for v, a in zip(vals_b, angles)]
     poly_a = " ".join([f"{x:.1f},{y:.1f}" for x,y in pts_a])
     poly_b = " ".join([f"{x:.1f},{y:.1f}" for x,y in pts_b])
 
-    # Dots on polygon A vertices (teal, larger)
     dots_a = "".join([
         f'<circle cx="{x:.1f}" cy="{y:.1f}" r="4" fill="{TEAL}" stroke="white" stroke-width="1.5"/>'
         for x, y in pts_a
     ])
-    # Dots on polygon B vertices (navy, smaller)
     dots_b = "".join([
         f'<circle cx="{x:.1f}" cy="{y:.1f}" r="2.5" fill="#0f3460" stroke="white" stroke-width="1" opacity="0.7"/>'
         for x, y in pts_b
     ])
 
-    # Numeric value labels next to polygon A vertices
     val_labels = ""
     for i, (val, angle) in enumerate(zip(vals_a, angles)):
         x, y = pt(val, angle)
@@ -338,7 +476,6 @@ def radar_html(vals_a, vals_b, labels, title_a="Tenant", title_b="Best match", s
             f'font-family="Plus Jakarta Sans,system-ui" font-size="10" font-weight="700" fill="{TEAL}">{val}</text>'
         )
 
-    # Variable labels — full text, smart anchor/dy
     lbls = ""
     for i, (angle, lbl) in enumerate(zip(angles, labels)):
         lx, ly = pt_lbl(angle)
@@ -359,7 +496,6 @@ def radar_html(vals_a, vals_b, labels, title_a="Tenant", title_b="Best match", s
             f'font-size="11" fill="#334155" font-weight="500">{lbl}</text>'
         )
 
-    # Legend — pinned to bottom of expanded canvas
     leg_y = svg_h - 20
     legend = (
         f'<rect x="12" y="{leg_y-8}" width="12" height="12" rx="3" fill="{TEAL}" opacity="0.85"/>'
@@ -377,74 +513,6 @@ def radar_html(vals_a, vals_b, labels, title_a="Tenant", title_b="Best match", s
         f'</svg>'
     )
     return f'<div style="display:flex;justify-content:center;padding:4px 0;">{svg}</div>'
-
-
-def verbal_explanation_html(name_a, name_b, score, all_details, vals_a_dict, vals_b_dict):
-    """
-    Genera una spiegazione verbale chiara del match in inglese.
-    Restituisce HTML per st.markdown.
-    """
-    # Calcola affinità e differenze principali
-    strong = []   # score >= 0.75
-    medium = []   # score 0.50-0.75
-    weak   = []   # score < 0.50
-
-    for f, sc, w, mode in all_details:
-        va = vals_a_dict[f]
-        vb = vals_b_dict[f]
-        lbl = FEATURE_LABELS[f][0].split(" ", 1)[1]  # senza emoji
-        if sc >= 0.75:
-            strong.append((lbl, va, vb, mode, sc))
-        elif sc >= 0.50:
-            medium.append((lbl, va, vb, mode, sc))
-        else:
-            weak.append((lbl, va, vb, mode, sc))
-
-    # Paragrafo introduttivo
-    if score >= 85:
-        intro = f"<strong>{name_a}</strong> and <strong>{name_b}</strong> are an excellent match ({score:.1f}%). They share very similar lifestyles across most dimensions, which typically leads to low friction and a positive co-living experience."
-    elif score >= 70:
-        intro = f"<strong>{name_a}</strong> and <strong>{name_b}</strong> are a good match ({score:.1f}%). They align well on several key dimensions, with only a few areas where some adaptation may be needed."
-    else:
-        intro = f"<strong>{name_a}</strong> and <strong>{name_b}</strong> have a moderate compatibility ({score:.1f}%). There are meaningful differences to be aware of before placing them together."
-
-    # Punti di forza
-    strengths_html = ""
-    if strong:
-        items = "".join([
-            f'<li><strong>{lbl}</strong>: both score {va}/5 and {vb}/5 — '
-            f'{"very similar" if mode == "similarity" else "well balanced"}</li>'
-            for lbl, va, vb, mode, sc in strong[:3]
-        ])
-        strengths_html = f"""
-        <div style="margin-top:0.9rem;">
-          <div style="font-size:0.78rem;font-weight:700;color:#0d7377;margin-bottom:0.35rem;
-                      text-transform:uppercase;letter-spacing:0.05em;">Strong alignments</div>
-          <ul style="margin:0;padding-left:1.2rem;font-size:0.82rem;color:#334155;line-height:1.7;">{items}</ul>
-        </div>"""
-
-    # Aree di attenzione
-    tension_html = ""
-    if weak:
-        items = "".join([
-            f'<li><strong>{lbl}</strong>: {va}/5 vs {vb}/5 — '
-            f'{"different preferences, worth discussing" if mode == "similarity" else "similar energy level, may compete for shared spaces"}</li>'
-            for lbl, va, vb, mode, sc in weak[:2]
-        ])
-        tension_html = f"""
-        <div style="margin-top:0.75rem;">
-          <div style="font-size:0.78rem;font-weight:700;color:#f59e0b;margin-bottom:0.35rem;
-                      text-transform:uppercase;letter-spacing:0.05em;">Areas to watch</div>
-          <ul style="margin:0;padding-left:1.2rem;font-size:0.82rem;color:#334155;line-height:1.7;">{items}</ul>
-        </div>"""
-
-    return f"""
-    <div style="background:#f8fffe;border:1px solid #ccfbf1;border-radius:10px;
-                padding:1rem 1.25rem;margin-top:0.75rem;">
-      <div style="font-size:0.82rem;color:#1a2332;line-height:1.65;">{intro}</div>
-      {strengths_html}
-      {tension_html}
-    </div>"""
 
 
 # ============================================================
@@ -525,7 +593,7 @@ with tab1:
         st.error("Tenant not found.")
         st.stop()
 
-    # Profile card — barre 2 colonne
+    # Profile card
     st.markdown('<div class="profile-box">', unsafe_allow_html=True)
     c_av, c_bars = st.columns([1, 5], gap="large")
     with c_av:
@@ -540,7 +608,7 @@ with tab1:
         st.markdown(vars_grid_html(fva), unsafe_allow_html=True)
     st.markdown('</div>', unsafe_allow_html=True)
 
-    # Calcola match live
+    # Compute live matches
     live = match_from_profile(sel_row.iloc[0], profiles, top_n=top_n)
 
     st.markdown('<div class="section-title">Top Matches</div>', unsafe_allow_html=True)
@@ -549,43 +617,46 @@ with tab1:
         unsafe_allow_html=True
     )
 
-    # Radar best match
+    # ── Radar expander ─────────────────────────────────────────
     if live:
         best = live[0]
         best_row = profiles[profiles["tenant_label"] == best["label"]].iloc[0]
         va_list = [int(sel_row[f].values[0]) for f in FEATURES]
         vb_list = [int(best_row[f]) for f in FEATURES]
-        short_lbls = [FEATURE_LABELS[f][0].split(" ",1)[1].replace(" ","\n") if False else FEATURE_LABELS[f][0].split(" ",1)[1] for f in FEATURES]
+        short_lbls = [FEATURE_LABELS[f][0].split(" ", 1)[1] for f in FEATURES]
+        fvb_dict = {f: int(best_row[f]) for f in FEATURES}
+        va_dict  = {f: int(sel_row[f].values[0]) for f in FEATURES}
 
         with st.expander(f"📡 Radar — {selected_tenant} vs {best['label']} ({best['score']:.1f}%)", expanded=True):
-            radar_col, info_col = st.columns([3, 2], gap="large")
+            # TOP ROW: radar (55%) | score + names (45%)
+            radar_col, info_col = st.columns([11, 9])
             with radar_col:
                 components.html(
                     radar_html(va_list, vb_list, short_lbls,
                                title_a=selected_tenant[:14], title_b=best["label"][:14]),
-                    height=520
+                    height=480
                 )
             with info_col:
-                st.markdown(f"**{selected_tenant}** *(teal)* vs **{best['label']}** *(dashed)*")
-                st.markdown(f"Compatibility score: **{best['score']:.1f}%**")
-                st.caption("The radar shows how the two tenants compare across all 10 variables. "
-                           "Overlapping areas = compatible. Diverging spikes = differences.")
-                st.divider()
-                fva_b = [(f, int(sel_row[f].values[0])) for f in FEATURES]
-                fvb_dict = {f: int(best_row[f]) for f in FEATURES}
-                st.markdown(vars_grid_html(fva_b, fvb_dict), unsafe_allow_html=True)
-                st.caption("Teal = selected tenant · Grey = best match · ≈ similarity · ⇄ complementarity")
-                # Verbal explanation
-                va_dict = {f: int(sel_row[f].values[0]) for f in FEATURES}
-                vb_dict_exp = {f: int(best_row[f]) for f in FEATURES}
-                all_det = best["all_details"]
-                st.markdown(
-                    verbal_explanation_html(selected_tenant, best["label"], best["score"],
-                                           all_det, va_dict, vb_dict_exp),
-                    unsafe_allow_html=True
-                )
+                st.markdown(radar_info_html(selected_tenant, best["label"], best["score"]),
+                            unsafe_allow_html=True)
 
-    # Lista match
+            # BOTTOM ROW: 5 vars left | 5 vars right
+            bc1, bc2 = st.columns(2)
+            with bc1:
+                left_vars = [(f, int(sel_row[f].values[0])) for f in FEATURES[:5]]
+                st.markdown(vars_col_html(left_vars, fvb_dict), unsafe_allow_html=True)
+            with bc2:
+                right_vars = [(f, int(sel_row[f].values[0])) for f in FEATURES[5:]]
+                st.markdown(vars_col_html(right_vars, fvb_dict), unsafe_allow_html=True)
+
+            # VERBAL EXPLANATION: full width
+            st.markdown(
+                verbal_explanation_html(selected_tenant, best["label"], best["score"],
+                                        best["all_details"], va_dict, fvb_dict),
+                unsafe_allow_html=True
+            )
+
+    # ── Match cards ────────────────────────────────────────────
     for rank, m in enumerate(live, start=1):
         label = m["label"]
         score = m["score"]
@@ -601,10 +672,13 @@ with tab1:
         with c1:
             st.image(avatar_url(label, 96), width=72)
         with c2:
-            st.markdown(f'<div class="match-name">#{rank} &nbsp; {label}</div>', unsafe_allow_html=True)
-            st.markdown(f'<div class="match-score-text">Compatibility: <strong>{score:.1f}%</strong></div>', unsafe_allow_html=True)
-            st.markdown(f"<div style='margin-top:0.4rem;'>Top drivers: {driver_tags}</div>", unsafe_allow_html=True)
-            st.markdown(f'<div class="explanation-box">High compatibility driven by {driver_text}.</div>', unsafe_allow_html=True)
+            st.markdown(
+                f'<div class="match-name"><span class="rank-pill">{rank}</span>{label}</div>'
+                f'<div class="match-score-text">Compatibility: <strong style="color:#0f3460;font-size:0.92rem;">{score:.1f}%</strong></div>'
+                f'<div style="margin-top:0.5rem;">Top drivers: {driver_tags}</div>'
+                f'<div class="explanation-box">Strong alignment in {driver_text}.</div>',
+                unsafe_allow_html=True
+            )
         with c3:
             st.markdown(
                 f"<div style='display:flex;justify-content:flex-end;align-items:center;height:100%;'>"
@@ -613,12 +687,19 @@ with tab1:
             )
         st.markdown('</div>', unsafe_allow_html=True)
 
-        # Breakdown — 2 colonne, HTML unico
         with st.expander("📋 Variable breakdown"):
             fva2 = [(f, int(sel_row[f].values[0])) for f in FEATURES]
             fvb2 = {f: int(match_row[f]) for f in FEATURES}
-            st.markdown(vars_grid_html(fva2, fvb2, show_mode=True), unsafe_allow_html=True)
-            st.caption("Teal = selected tenant · Grey = match · ≈ similarity · ⇄ complementarity")
+            bc1, bc2 = st.columns(2)
+            with bc1:
+                st.markdown(vars_col_html(fva2[:5], fvb2, show_mode=True), unsafe_allow_html=True)
+            with bc2:
+                st.markdown(vars_col_html(fva2[5:], fvb2, show_mode=True), unsafe_allow_html=True)
+            st.markdown(
+                "<p style='margin:0.5rem 0 0 0;font-size:0.74rem;color:#64748b;'>"
+                "Teal = selected tenant · Grey = match · ≈ similarity · ⇄ complementarity</p>",
+                unsafe_allow_html=True
+            )
 
 
 # ============================================================
@@ -653,42 +734,46 @@ with tab2:
 
     live2 = match_from_user(user_vals, profiles, top_n=top_n)
 
-    # Radar Tab2
+    # ── Radar expander ─────────────────────────────────────────
     if live2:
         best2 = live2[0]
         best2_row = profiles[profiles["tenant_label"] == best2["label"]].iloc[0]
-        vu_list  = [user_vals[f] for f in FEATURES]
-        vb2_list = [int(best2_row[f]) for f in FEATURES]
-        short_lbls2 = [FEATURE_LABELS[f][0].split(" ",1)[1] for f in FEATURES]
+        vu_list   = [user_vals[f] for f in FEATURES]
+        vb2_list  = [int(best2_row[f]) for f in FEATURES]
+        short_lbls2 = [FEATURE_LABELS[f][0].split(" ", 1)[1] for f in FEATURES]
+        fvb2_dict = {f: int(best2_row[f]) for f in FEATURES}
+        vu_dict   = {f: user_vals[f] for f in FEATURES}
 
         with st.expander(f"📡 Radar — You vs {best2['label']} ({best2['score']:.1f}%)", expanded=True):
-            rc1, rc2 = st.columns([3, 2], gap="large")
+            # TOP ROW: radar (55%) | score + names (45%)
+            rc1, rc2 = st.columns([11, 9])
             with rc1:
                 components.html(
                     radar_html(vu_list, vb2_list, short_lbls2,
                                title_a="You", title_b=best2["label"][:14]),
-                    height=520
+                    height=480
                 )
             with rc2:
-                st.markdown(f"**You** *(teal)* vs **{best2['label']}** *(dashed)*")
-                st.markdown(f"Compatibility score: **{best2['score']:.1f}%**")
-                st.caption("The radar shows how you compare across all 10 variables.")
-                st.divider()
-                fvu = [(f, user_vals[f]) for f in FEATURES]
-                fvb2_dict = {f: int(best2_row[f]) for f in FEATURES}
-                st.markdown(vars_grid_html(fvu, fvb2_dict), unsafe_allow_html=True)
-                st.caption("Teal = you · Grey = best match")
-                # Verbal explanation
-                vu_dict = {f: user_vals[f] for f in FEATURES}
-                vb2_dict_exp = {f: int(best2_row[f]) for f in FEATURES}
-                all_det2 = best2["all_details"]
-                st.markdown(
-                    verbal_explanation_html("You", best2["label"], best2["score"],
-                                           all_det2, vu_dict, vb2_dict_exp),
-                    unsafe_allow_html=True
-                )
+                st.markdown(radar_info_html("You", best2["label"], best2["score"]),
+                            unsafe_allow_html=True)
 
-    # Lista match Tab2
+            # BOTTOM ROW: 5 vars left | 5 vars right
+            bc1, bc2 = st.columns(2)
+            with bc1:
+                left_vars2 = [(f, user_vals[f]) for f in FEATURES[:5]]
+                st.markdown(vars_col_html(left_vars2, fvb2_dict), unsafe_allow_html=True)
+            with bc2:
+                right_vars2 = [(f, user_vals[f]) for f in FEATURES[5:]]
+                st.markdown(vars_col_html(right_vars2, fvb2_dict), unsafe_allow_html=True)
+
+            # VERBAL EXPLANATION: full width
+            st.markdown(
+                verbal_explanation_html("You", best2["label"], best2["score"],
+                                        best2["all_details"], vu_dict, fvb2_dict),
+                unsafe_allow_html=True
+            )
+
+    # ── Match cards ────────────────────────────────────────────
     for rank, m in enumerate(live2, start=1):
         label = m["label"]
         score = m["score"]
@@ -696,6 +781,7 @@ with tab2:
             f'<span class="driver-tag">{prettify(f)}</span>'
             for f, sc, w, mode in m["top3"]
         ])
+        driver_text = ", ".join([prettify(f) for f, sc, w, mode in m["top3"]])
         match_row = profiles[profiles["tenant_label"] == label].iloc[0]
 
         st.markdown('<div class="match-card">', unsafe_allow_html=True)
@@ -703,9 +789,13 @@ with tab2:
         with c1:
             st.image(avatar_url(label, 96), width=72)
         with c2:
-            st.markdown(f'<div class="match-name">#{rank} &nbsp; {label}</div>', unsafe_allow_html=True)
-            st.markdown(f'<div class="match-score-text">Compatibility: <strong>{score:.1f}%</strong></div>', unsafe_allow_html=True)
-            st.markdown(f"<div style='margin-top:0.4rem;'>Top drivers: {driver_tags}</div>", unsafe_allow_html=True)
+            st.markdown(
+                f'<div class="match-name"><span class="rank-pill">{rank}</span>{label}</div>'
+                f'<div class="match-score-text">Compatibility: <strong style="color:#0f3460;font-size:0.92rem;">{score:.1f}%</strong></div>'
+                f'<div style="margin-top:0.5rem;">Top drivers: {driver_tags}</div>'
+                f'<div class="explanation-box">Strong alignment in {driver_text}.</div>',
+                unsafe_allow_html=True
+            )
         with c3:
             st.markdown(
                 f"<div style='display:flex;justify-content:flex-end;align-items:center;height:100%;'>"
@@ -717,8 +807,16 @@ with tab2:
         with st.expander("📋 Variable breakdown"):
             fvu2 = [(f, user_vals[f]) for f in FEATURES]
             fvb3 = {f: int(match_row[f]) for f in FEATURES}
-            st.markdown(vars_grid_html(fvu2, fvb3, show_mode=True), unsafe_allow_html=True)
-            st.caption("Teal = you · Grey = match · ≈ similarity · ⇄ complementarity")
+            bc1, bc2 = st.columns(2)
+            with bc1:
+                st.markdown(vars_col_html(fvu2[:5], fvb3, show_mode=True), unsafe_allow_html=True)
+            with bc2:
+                st.markdown(vars_col_html(fvu2[5:], fvb3, show_mode=True), unsafe_allow_html=True)
+            st.markdown(
+                "<p style='margin:0.5rem 0 0 0;font-size:0.74rem;color:#64748b;'>"
+                "Teal = you · Grey = match · ≈ similarity · ⇄ complementarity</p>",
+                unsafe_allow_html=True
+            )
 
 
 # ============================================================
@@ -726,7 +824,7 @@ with tab2:
 # ============================================================
 st.markdown("""
 <div class="footer">
-    Co-living Compatibility Engine · Prototype v3 · Built on synthetic data<br>
+    Co-living Compatibility Engine · Prototype v4 · Built on synthetic data<br>
     In production: real tenant profiles, feedback loops, adaptive weight tuning.
 </div>
 """, unsafe_allow_html=True)
